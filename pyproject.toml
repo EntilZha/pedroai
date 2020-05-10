@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "pedroai"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Pedro Rodriguez <me@pedro.ai>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6"
 plotnine = "^0.6"
 requests = "^2.23.0"
 

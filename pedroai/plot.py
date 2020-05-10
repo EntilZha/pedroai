@@ -4,6 +4,9 @@ from plotnine import (
 )
 
 
+DISCRETE_COLORS = ["#1ECBE0", "#E0331E", "#6AE01E", "#941EE0"]
+
+
 class theme_pedroai(theme_light):
     """
     A theme similar to :class:`theme_linedraw` but with light grey
