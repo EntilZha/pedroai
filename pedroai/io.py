@@ -52,7 +52,7 @@ class requires_file:
         else:
             eprint(f"File missing, skipping function: {self._path}")
 
-            def nop(*args, **kwargs):
+            def nop(*args, **kwargs):  # pylint: disable=unused-argument
                 pass
 
             return nop

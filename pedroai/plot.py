@@ -1,6 +1,10 @@
 from plotnine import (
-    theme, theme_light,
-    element_text, element_blank, element_rect, element_line
+    theme,
+    theme_light,
+    element_text,
+    element_blank,
+    element_rect,
+    element_line,
 )
 
 
@@ -20,19 +24,20 @@ class theme_pedroai(theme_light):
         Base font family.
     """
 
-    def __init__(self, base_size=11, base_family='DejaVu Sans'):
+    def __init__(self, base_size=11, base_family="DejaVu Sans"):
         theme_light.__init__(self, base_size, base_family)
-        self.add_theme(theme(
-            text=element_text(size=14),
-            axis_ticks=element_line(color='#DDDDDD', size=0.5),
-            panel_border=element_rect(fill='None', color='#838383',
-                                      size=1),
-                                      panel_spacing=.40,
-            strip_background=element_rect(
-                fill='#DDDDDD', color='#838383', size=1),
-            strip_text_x=element_text(color='black'),
-            strip_text_y=element_text(color='black', angle=-90),
-            legend_key=element_blank(),
-            legend_position='top',
-            plot_margin=0,
-        ), inplace=True)
+        self.add_theme(
+            theme(
+                text=element_text(size=14),
+                axis_ticks=element_line(color="#DDDDDD", size=0.5),
+                panel_border=element_rect(fill="None", color="#838383", size=1),
+                panel_spacing=0.40,
+                strip_background=element_rect(fill="#DDDDDD", color="#838383", size=1),
+                strip_text_x=element_text(color="black"),
+                strip_text_y=element_text(color="black", angle=-90),
+                legend_key=element_blank(),
+                legend_position="top",
+                plot_margin=0,
+            ),
+            inplace=True,
+        )
