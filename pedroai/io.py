@@ -1,3 +1,4 @@
+from typing import List, Any
 import sys
 import json
 import os
@@ -13,12 +14,12 @@ def read_json(path: str):
         return json.load(f)
 
 
-def write_json(path: str, obj):
-    with open(path, "wb") as f:
+def write_json(path: str, obj: Any):
+    with open(path, "w") as f:
         json.dump(obj, f)
 
 
-def read_jsonlines(path):
+def read_jsonlines(path: str):
     out = []
     with open(path) as f:
         for line in f:
@@ -26,10 +27,17 @@ def read_jsonlines(path):
     return out
 
 
+def write_jsonlines(path: str, elements: List[Any]):
+    with open(path, "w") as f:
+        for e in elements:
+            f.write(json.dumps(e))
+            f.write("\n")
+
+
 def download(remote_path, local_path):
     eprint(f"Downloading {remote_path} to {local_path}")
     response = requests.get(remote_path, stream=True)
-    with open(local_path, "wb") as f:
+    with open(local_path, "w") as f:
         for data in response.iter_content():
             f.write(data)
 
@@ -48,4 +56,3 @@ class requires_file:
                 pass
 
             return nop
-
