@@ -19,12 +19,25 @@ def write_json(path: str, obj: Any):
         json.dump(obj, f)
 
 
-def read_jsonlines(path: str):
+def _read_jsonlines_list(path: str):
     out = []
     with open(path) as f:
         for line in f:
             out.append(json.loads(line))
     return out
+
+
+def _read_jsonlines_lazy(path: str):
+    with open(path) as f:
+        for line in f:
+            yield json.loads(line)
+
+
+def read_jsonlines(path: str, lazy: bool = False):
+    if lazy:
+        return _read_jsonlines_lazy(path)
+    else:
+        return _read_jsonlines_list(path)
 
 
 def write_jsonlines(path: str, elements: List[Any]):
