@@ -30,9 +30,9 @@ jobs:
       - name: Lint
         run: poetry run pylint -E pedroai
       - name: Code Format
-        run: poetry run black --check
+        run: poetry run black --check .
       - name: MyPy Type Check
-        run: poetry run mypy pedroai
+        run: poetry run mypy .
       - name: Test with pytest
         run: |
           poetry run pytest
