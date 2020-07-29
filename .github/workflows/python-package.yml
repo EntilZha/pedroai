@@ -32,9 +32,6 @@ jobs:
       - name: Code Format
         run: poetry run black --check .
       - name: MyPy Type Check
-        run: |
-          pwd
-          ls
-          poetry run mypy .
+        run: poetry run mypy .
       - name: Test with pytest
         run: poetry run pytest
