@@ -32,7 +32,7 @@ jobs:
       - name: Code Format
         run: poetry run black --check
       - name: MyPy Type Check
-        run: poetry run mypy
+        run: poetry run mypy pedroai
       - name: Test with pytest
         run: |
           poetry run pytest
