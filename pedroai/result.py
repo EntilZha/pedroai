@@ -89,13 +89,13 @@ class Ok(Generic[T], AbstractResult):
         return self._value
 
     def unwrap_err(self) -> E:
-        raise ResultException(f"{self.value}")
+        raise ResultException(f"{self._value}")
 
     def expect(self, msg: str) -> T:
         return self._value
 
     def expect_err(self, msg: str) -> E:
-        raise ResultException(f"{msg}: {self.value}")
+        raise ResultException(f"{msg}: {self._value}")
 
 
 class Err(Generic[E], AbstractResult):
@@ -130,7 +130,7 @@ class Err(Generic[E], AbstractResult):
         raise ResultException(f"{self._err_value}")
 
     def unwrap_err(self) -> E:
-        raise self._err_value
+        return self._err_value
 
     def expect(self, msg: str) -> T:
         raise ResultException(f"{msg}: {self._err_value}")
