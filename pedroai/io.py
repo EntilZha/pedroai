@@ -92,7 +92,7 @@ class requires_file:
 def safe_file(path: str) -> str:
     """
     Ensure that the path to the file exists, then return the path.
-    
+
     For example, if the path passed in is /home/entilzha/stuff/stuff/test.txt,
     this function will run the equivalent of mkdir -p /home/entilzha/stuff/stuff/
     """
