@@ -34,7 +34,7 @@ def _read_jsonlines_list(path: str):
     out = []
     with open(path) as f:
         for line in f:
-            out.append(parser.parse(line))
+            out.append(parser.parse(line, recursive=True))
     return out
 
 
@@ -45,7 +45,7 @@ def _read_jsonlines_lazy(path: str):
     parser = simdjson.Parser()
     with open(path) as f:
         for line in f:
-            yield parser.parse(line)
+            yield parser.parse(line, recursive=True)
 
 
 def read_jsonlines(path: str, lazy: bool = False):
