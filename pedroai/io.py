@@ -2,6 +2,7 @@ from typing import List, Any
 import sys
 import json
 import os
+import simdjson
 import requests
 
 
@@ -14,7 +15,7 @@ def read_json(path: str):
     Read a json file from a string path
     """
     with open(path) as f:
-        return json.load(f)
+        return simdjson.load(f)
 
 
 def write_json(path: str, obj: Any):
@@ -29,10 +30,11 @@ def _read_jsonlines_list(path: str):
     """
     Read a jsonlines file into memory all at once
     """
+    parser = simdjson.Parser()
     out = []
     with open(path) as f:
         for line in f:
-            out.append(json.loads(line))
+            out.append(parser.parse(line))
     return out
 
 
@@ -40,9 +42,10 @@ def _read_jsonlines_lazy(path: str):
     """
     Lazily return the contents of a jsonlines file
     """
+    parser = simdjson.Parser()
     with open(path) as f:
         for line in f:
-            yield json.loads(line)
+            yield parser.parse(line)
 
 
 def read_jsonlines(path: str, lazy: bool = False):

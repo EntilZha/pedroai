@@ -363,6 +363,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.9.0"
 
 [[package]]
+category = "main"
+description = "Seamless operability between C++11 and Python"
+name = "pybind11"
+optional = false
+python-versions = "*"
+version = "2.5.0"
+
+[[package]]
 category = "dev"
 description = "python code static checker"
 name = "pylint"
@@ -384,6 +392,25 @@ name = "pyparsing"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 version = "2.4.7"
+
+[[package]]
+category = "main"
+description = "simdjson bindings for python"
+name = "pysimdjson"
+optional = false
+python-versions = ">3.4"
+version = "2.4.0"
+
+[package.dependencies]
+[package.dependencies.pybind11]
+optional = true
+version = "*"
+
+[package.extras]
+benchmark = ["pytest", "pytest-benchmark", "orjson", "python-rapidjson", "simplejson", "ujson"]
+dev = ["pybind11"]
+release = ["m2r", "sphinx", "ghp-import", "bumpversion"]
+test = ["pytest"]
 
 [[package]]
 category = "dev"
@@ -561,7 +588,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "513b93e0ffcf080b96042ea91cea8acdb36aa63c309eec90c06a1ddf807e3bfb"
+content-hash = "2b0cea37937290b5a0db3b2c968c0575772cc639eb95a4302884e37deecdf293"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -823,6 +850,10 @@ py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
     {file = "py-1.9.0.tar.gz", hash = "sha256:9ca6883ce56b4e8da7e79ac18787889fa5206c79dcc67fb065376cd2fe03f342"},
 ]
+pybind11 = [
+    {file = "pybind11-2.5.0-py2.py3-none-any.whl", hash = "sha256:205d9f9615eac190811cb8c3c2b2f95f6844ddba0fa0a1d45d00793338741601"},
+    {file = "pybind11-2.5.0.tar.gz", hash = "sha256:ea5a4e7a880112915463826f1acbec5892df36dfe102ecb249229ac514fb54ad"},
+]
 pylint = [
     {file = "pylint-2.5.3-py3-none-any.whl", hash = "sha256:d0ece7d223fe422088b0e8f13fa0a1e8eb745ebffcb8ed53d3e95394b6101a1c"},
     {file = "pylint-2.5.3.tar.gz", hash = "sha256:7dd78437f2d8d019717dbf287772d0b2dbdfd13fc016aa7faa08d67bccc46adc"},
@@ -830,6 +861,24 @@ pylint = [
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
+]
+pysimdjson = [
+    {file = "pysimdjson-2.4.0-cp35-cp35m-macosx_10_14_x86_64.whl", hash = "sha256:32ccf1a69feabc3f3f9c2384434342122cf0d4a76ef1c642430d716e733e46dd"},
+    {file = "pysimdjson-2.4.0-cp35-cp35m-manylinux2014_aarch64.whl", hash = "sha256:5b6a18a43cac1678c2afc84b9507b3ef24aafbf55f34bcd18b1591e1f997fba5"},
+    {file = "pysimdjson-2.4.0-cp35-cp35m-manylinux2014_x86_64.whl", hash = "sha256:d117ed0b5f3cf701ed7085ee83e32e7b384face46af0d5583d8e8c63f13cfdf3"},
+    {file = "pysimdjson-2.4.0-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:0e739d5ee2f03629147cf6d137951e7e9f2f034d76b2b490e0ac7b0714d49209"},
+    {file = "pysimdjson-2.4.0-cp36-cp36m-manylinux2014_aarch64.whl", hash = "sha256:34fe0ff3242413dbeb3d9e69c699a4b3a8e7c1023cfc1fbdcb9e3d4cd23f68fd"},
+    {file = "pysimdjson-2.4.0-cp36-cp36m-manylinux2014_x86_64.whl", hash = "sha256:78843c780abb4111c42cd8cafbb565f6b725909f7c5c6a28d613d1c6cef799bc"},
+    {file = "pysimdjson-2.4.0-cp37-cp37m-macosx_10_14_x86_64.whl", hash = "sha256:09bcb878241f7c502c2fea220202b4e41a1daf0a869bfca9d9d39e7d4bad0ecf"},
+    {file = "pysimdjson-2.4.0-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:6252fbcdef717d4701213ff93ec58a985c571d42c84ab7ac5042d5327e66ad43"},
+    {file = "pysimdjson-2.4.0-cp37-cp37m-manylinux2014_x86_64.whl", hash = "sha256:92bac8f1e4b55674141acbddc9df7dcef807b367250fc176e38f1a9020ee1378"},
+    {file = "pysimdjson-2.4.0-cp37-cp37m-win_amd64.whl", hash = "sha256:7a14dcd48dc1fb56f287456b941d4e5c2c9dae5af8b33ed5e87f6f2e2fa609b7"},
+    {file = "pysimdjson-2.4.0-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:f0010bf7d2a0303d0dcff50b5c08f99d906b16da729d59f21e4c47fc64c2cbc2"},
+    {file = "pysimdjson-2.4.0-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:3d31a46a39b0f17237c6cc30f1249cd3c72e690c19dcfe94aefac0575e82227e"},
+    {file = "pysimdjson-2.4.0-cp38-cp38-manylinux2014_x86_64.whl", hash = "sha256:a8cb09539144b09cc6df327b032ad0a6ba6a641a814a4bc606ddde91bfb5bab3"},
+    {file = "pysimdjson-2.4.0-cp38-cp38-win_amd64.whl", hash = "sha256:9b8ae7633005d67d98f5ca4888e369060703ac5a963e76653de021e19632b048"},
+    {file = "pysimdjson-2.4.0-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:3729a16e941dd87925d9795870da8f7cd2c505d96c307100aa29e0bd1259efd2"},
+    {file = "pysimdjson-2.4.0.tar.gz", hash = "sha256:e8aa6589a11820b0eaa2e70eefe154b6b339f7f5302d3ec14af0df5968538a44"},
 ]
 pytest = [
     {file = "pytest-5.4.3-py3-none-any.whl", hash = "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"},

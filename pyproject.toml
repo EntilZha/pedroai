@@ -8,6 +8,7 @@ authors = ["Pedro Rodriguez <me@pedro.ai>"]
 python = "^3.7"
 plotnine = "^0.7"
 requests = "^2.23.0"
+pysimdjson = {extras = ["dev"], version = "^2.4.0"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
