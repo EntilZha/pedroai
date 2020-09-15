@@ -57,7 +57,7 @@ class AbstractResult(ABC, Generic[T, E]):
         pass
 
 
-class Ok(Generic[T], AbstractResult):
+class Ok(AbstractResult, Generic[T]):
     def __init__(self, value: T):
         self._value = value
 
@@ -98,7 +98,7 @@ class Ok(Generic[T], AbstractResult):
         raise ResultException(f"{msg}: {self._value}")
 
 
-class Err(Generic[E], AbstractResult):
+class Err(AbstractResult, Generic[E]):
     def __init__(self, err_value: E):
         self._err_value = err_value
 
