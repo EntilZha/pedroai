@@ -1,9 +1,10 @@
-from typing import List, Any
-import sys
 import json
 import os
-import simdjson
+import sys
+from typing import Any, List
+
 import requests
+import simdjson
 
 
 def eprint(*args, **kwargs):

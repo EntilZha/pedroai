@@ -29,8 +29,10 @@ jobs:
           poetry install
       - name: Lint
         run: poetry run pylint pedroai
-      - name: Code Format
+      - name: Code Format - Black
         run: poetry run black --check .
+      - name: Code Format - isort
+        run: poetry run isort --check .
       - name: MyPy Type Check
         run: poetry run mypy .
       - name: Test with pytest

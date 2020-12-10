@@ -1,4 +1,4 @@
-from pedroai.result import Ok, Err
+from pedroai.result import Err, Ok
 
 
 def test_init():

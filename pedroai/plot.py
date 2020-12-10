@@ -1,12 +1,5 @@
-from plotnine import (
-    theme,
-    theme_light,
-    element_text,
-    element_blank,
-    element_rect,
-    element_line,
-)
-
+from plotnine import (element_blank, element_line, element_rect, element_text,
+                      theme, theme_light)
 
 DISCRETE_COLORS = ["#1ECBE0", "#E0331E", "#6AE01E", "#941EE0"]
 
