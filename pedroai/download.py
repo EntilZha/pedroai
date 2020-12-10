@@ -97,7 +97,14 @@ def main(
 
     if download:
         for local_file, remote_file in config.downloads.items():
-            download_file(remote_file, local_file, overwrite=overwrite, dry_run=dry_run)
+            if isinstance(remote_file, str):
+                download_file(
+                    remote_file, local_file, overwrite=overwrite, dry_run=dry_run
+                )
+            elif isinstance(remote_file, DownloadSpec):
+                download_file(
+                    remote_file.url, local_file, overwrite=overwrite, dry_run=dry_run
+                )
 
     for job in config.jobs.values():
         log.info("Running: %s", job.command)
