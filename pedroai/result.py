@@ -139,4 +139,4 @@ class Err(AbstractResult, Generic[E]):
         return self._err_value
 
 
-Result = Union[Ok[T], Err[E]]
+Result = Union[Ok[T], Err[E]]  # pylint: disable=unsubscriptable-object
