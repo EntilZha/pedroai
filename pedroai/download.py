@@ -105,6 +105,8 @@ def main(
                 download_file(
                     remote_file.url, local_file, overwrite=overwrite, dry_run=dry_run
                 )
+            else:
+                raise ValueError(f"Invalid type for remote_file: {type(remote_file)}")
 
     for job in config.jobs.values():
         log.info("Running: %s", job.command)
