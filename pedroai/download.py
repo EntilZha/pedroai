@@ -1,11 +1,9 @@
-import logging
 import os
 import subprocess
 from typing import Dict, List, Union
 
 import toml
 from pydantic import BaseModel
-from rich.logging import RichHandler
 
 from pedroai.log import get_logger
 
