@@ -1,10 +1,16 @@
 import json
 import os
+import subprocess
 import sys
-from typing import Any, List
+from pathlib import Path
+from typing import Any, List, Union
 
 import requests
 import simdjson
+
+
+def shell(command: str):
+    subprocess.run(command, shell=True, check=True)
 
 
 def eprint(*args, **kwargs):
@@ -78,19 +84,36 @@ def download(remote_path, local_path):
 
 
 class requires_file:
-    def __init__(self, path):
+    def __init__(self, path: Union[str, Path]):
         self._path = path
 
     def __call__(self, f):
         if os.path.exists(self._path):
             return f
         else:
-            eprint(f"File missing, skipping function: {self._path}")
+            eprint(f"File missing, skipping function: path={self._path}")
 
             def nop(*args, **kwargs):  # pylint: disable=unused-argument
                 pass
 
             return nop
+
+
+class requires_files:
+    def __init__(self, paths: List[Union[str, Path]]):
+        self._paths = paths
+
+    def __call__(self, f):
+        for path in self._paths:
+            if os.path.exists(path):
+                return f
+            else:
+                eprint(f"File missing, skipping function: path={path}")
+
+                def nop(*args, **kwargs):  # pylint: disable=unused-argument
+                    pass
+
+                return nop
 
 
 def safe_file(path: str) -> str:
