@@ -7,12 +7,9 @@ import toml
 from pydantic import BaseModel
 from rich.logging import RichHandler
 
-logging.basicConfig(
-    format="%(message)s",
-    level=logging.INFO,
-    handlers=[RichHandler(rich_tracebacks=True)],
-)
-log = logging.getLogger(__name__)
+from pedroai.log import get_logger
+
+log = get_logger(__name__)
 
 VERSION = "0.1.0"
 
