@@ -18,7 +18,7 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-def read_json(path: str):
+def read_json(path: Union[str, Path]):
     """
     Read a json file from a string path
     """
@@ -26,7 +26,7 @@ def read_json(path: str):
         return simdjson.load(f)
 
 
-def write_json(path: str, obj: Any):
+def write_json(path: Union[str, Path], obj: Any):
     """
     Write an object to a string path as json.
     If the object is a pydantic model, export it to json
@@ -39,7 +39,7 @@ def write_json(path: str, obj: Any):
             json.dump(obj, f)
 
 
-def _read_jsonlines_list(path: str):
+def _read_jsonlines_list(path: Union[str, Path]):
     """
     Read a jsonlines file into memory all at once
     """
@@ -51,7 +51,7 @@ def _read_jsonlines_list(path: str):
     return out
 
 
-def _read_jsonlines_lazy(path: str):
+def _read_jsonlines_lazy(path: Union[str, Path]):
     """
     Lazily return the contents of a jsonlines file
     """
@@ -61,7 +61,7 @@ def _read_jsonlines_lazy(path: str):
             yield parser.parse(line, recursive=True)
 
 
-def read_jsonlines(path: str, lazy: bool = False):
+def read_jsonlines(path: Union[str, Path], lazy: bool = False):
     """
     Read a jsonlines file as a list/iterator of json objects
     """
@@ -71,7 +71,7 @@ def read_jsonlines(path: str, lazy: bool = False):
         return _read_jsonlines_list(path)
 
 
-def write_jsonlines(path: str, elements: List[Any]):
+def write_jsonlines(path: Union[str, Path], elements: List[Any]):
     """
     Write a list of json serialiazable objects to the path given
     """
@@ -122,7 +122,7 @@ class requires_files:
                 return nop
 
 
-def safe_file(path: str) -> str:
+def safe_file(path: Union[str, Path]) -> Union[str, Path]:
     """
     Ensure that the path to the file exists, then return the path.
 
