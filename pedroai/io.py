@@ -7,6 +7,7 @@ from typing import Any, List, Union
 
 import requests
 import simdjson
+from pydantic import BaseModel
 
 
 def shell(command: str):
@@ -27,10 +28,15 @@ def read_json(path: str):
 
 def write_json(path: str, obj: Any):
     """
-    Write an object to a string path as json
+    Write an object to a string path as json.
+    If the object is a pydantic model, export it to json
     """
-    with open(path, "w") as f:
-        json.dump(obj, f)
+    if isinstance(obj, BaseModel):
+        with open(path, "w") as f:
+            f.write(obj.json())
+    else:
+        with open(path, "w") as f:
+            json.dump(obj, f)
 
 
 def _read_jsonlines_list(path: str):
