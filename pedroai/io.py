@@ -8,6 +8,9 @@ from typing import Any, List, Union
 import requests
 import simdjson
 from pydantic import BaseModel
+from rich.console import Console
+
+console = Console()
 
 
 def shell(command: str):
@@ -82,7 +85,7 @@ def write_jsonlines(path: Union[str, Path], elements: List[Any]):
 
 
 def download(remote_path, local_path):
-    eprint(f"Downloading {remote_path} to {local_path}")
+    console.log(f"Downloading {remote_path} to {local_path}")
     response = requests.get(remote_path, stream=True)
     with open(local_path, "w") as f:
         for data in response.iter_content():
@@ -97,7 +100,7 @@ class requires_file:
         if os.path.exists(self._path):
             return f
         else:
-            eprint(f"File missing, skipping function: path={self._path}")
+            console.log("File missing, skipping function: path=", self._path)
 
             def nop(*args, **kwargs):  # pylint: disable=unused-argument
                 pass
@@ -110,16 +113,20 @@ class requires_files:
         self._paths = paths
 
     def __call__(self, f):
+        missing_files = []
         for path in self._paths:
-            if os.path.exists(path):
-                return f
-            else:
-                eprint(f"File missing, skipping function: path={path}")
+            if not os.path.exists(path):
+                missing_files.append(path)
 
-                def nop(*args, **kwargs):  # pylint: disable=unused-argument
-                    pass
+        if len(missing_files) > 0:
+            console.log("Files missing, skipping function: paths=", missing_files)
 
-                return nop
+            def nop(*args, **kwargs):  # pylint: disable=unused-argument
+                pass
+
+            return nop
+        else:
+            return f
 
 
 def safe_file(path: Union[str, Path]) -> Union[str, Path]:
