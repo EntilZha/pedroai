@@ -100,10 +100,9 @@ class requires_file:
         if os.path.exists(self._path):
             return f
         else:
-            console.log("File missing, skipping function: path=", self._path)
 
             def nop(*args, **kwargs):  # pylint: disable=unused-argument
-                pass
+                console.log("File missing, skipping function: path=", self._path)
 
             return nop
 
@@ -119,10 +118,9 @@ class requires_files:
                 missing_files.append(path)
 
         if len(missing_files) > 0:
-            console.log("Files missing, skipping function: paths=", missing_files)
 
             def nop(*args, **kwargs):  # pylint: disable=unused-argument
-                pass
+                console.log("Files missing, skipping function: paths=", missing_files)
 
             return nop
         else:
