@@ -5,7 +5,7 @@ K = TypeVar("K")
 
 
 def group_by(func: Callable[[T], K], iterable: Iterable[T]) -> Dict[K, List[T]]:
-    entries = {}
+    entries: Dict[K, List[T]] = {}
     for e in iterable:
         key = func(e)
         if key in entries:
