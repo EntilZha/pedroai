@@ -26,7 +26,7 @@ def read_json(path: Union[str, Path]):
     Read a json file from a string path
     """
     with open(path) as f:
-        return simdjson.load(f)
+        return simdjson.load(f)  # type: ignore
 
 
 def write_json(path: Union[str, Path], obj: Any):
