@@ -59,3 +59,7 @@ def to_precision(x, p):
         out.append(m)
 
     return "".join(out)
+
+
+def to_thousands(num: int):
+    return f"{num:,}"
