@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pedroai"
-version = "0.4.0"
+version = "0.4.1"
 description = ""
 authors = ["Pedro Rodriguez <me@pedro.ai>"]
 
@@ -8,7 +8,7 @@ authors = ["Pedro Rodriguez <me@pedro.ai>"]
 python = "^3.8, <3.12"
 plotnine = "^0.9"
 requests = "^2.27.1"
-pysimdjson = {extras = ["dev"], version = "^4.0.3"}
+pysimdjson = {extras = ["dev"], version = "^5.0.1"}
 typer = "^0.6.1"
 toml = "^0.10.2"
 pydantic = "^1.9.0"
