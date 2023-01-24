@@ -7,6 +7,7 @@ import requests
 PUSHCUTS_URL = os.environ.get("PUSHCUTS_URL")
 
 
+
 class PushcutsError(Exception):
     pass
 
@@ -28,7 +29,6 @@ def pushcut(title: str, text: str, pushcuts_url: Optional[str] = None):
 def stdin_input():
     for line in sys.stdin:
         return line.strip()
-
 
 def pushcuts_main(title: Optional[str] = None, text: Optional[str] = None):
     if title is not None and text is not None:

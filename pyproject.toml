@@ -6,7 +6,6 @@ authors = ["Pedro Rodriguez <me@pedro.ai>"]
 
 [tool.poetry.dependencies]
 python = "^3.8, <3.12"
-plotnine = "^0.9"
 requests = "^2.27.1"
 pysimdjson = {extras = ["dev"], version = "^5.0.1"}
 typer = "^0.6.1"
@@ -16,6 +15,8 @@ rich = "^12.4.1"
 altair-saver = "^0.5.0"
 altair = "^4.2.0"
 scipy = "^1.7.3"
+bibtexparser = "^1.4.0"
+tantivy = "^0.13.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
@@ -28,6 +29,12 @@ types-toml = "^0.10.7"
 
 [tool.poetry.scripts]
 pedroai = "pedroai.main:cli"
+snapshot = "pedroai.snapshot:cli"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.8.0"
+jupyterlab = "^3.5.2"
+jupyter-http-over-ws = "^0.0.8"
 
 [tool.isort]
 known_first_party = "pedroai"

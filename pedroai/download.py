@@ -4,6 +4,7 @@ from typing import Dict, List, Union
 
 import toml
 from pydantic import BaseModel
+import typer
 
 from pedroai.log import get_logger
 
@@ -56,7 +57,6 @@ def download_file(
     else:
         log.info("Downloading %s to %s", remote_file, local_file)
         _download_file(remote_file, local_file, dry_run=dry_run)
-
 
 def main(
     config_file: str = "files.toml",
