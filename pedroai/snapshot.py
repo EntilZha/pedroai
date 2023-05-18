@@ -21,8 +21,8 @@ def main(
     base_dir: str = SNAPSHOT_DIR,
     experiment_id: Optional[str] = None,
     dry_run: bool = False,
-    min_experiment_id=200_000,
-    max_experiment_id=300_000,
+    min_experiment_id: int=200_000,
+    max_experiment_id: int=300_000,
 ):
     """
     This tool helps isolate experiments on NFS by:
