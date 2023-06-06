@@ -1,0 +1,17 @@
+#queue_table {
+    height: 27%;
+    border: green;
+}
+
+.hidden {
+    display: none;
+}
+
+#logs {
+    min-height: 70%;
+    border: green;
+}
+
+.max_height {
+    min-height: 28;
+}

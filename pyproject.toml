@@ -1,35 +1,37 @@
 [tool.poetry]
 name = "pedroai"
-version = "0.4.1"
+version = "0.5.0"
 description = ""
 authors = ["Pedro Rodriguez <me@pedro.ai>"]
 
 [tool.poetry.dependencies]
 python = "^3.8, <3.12"
-requests = "^2.27.1"
-pysimdjson = {extras = ["dev"], version = "^5.0.1"}
-typer = "^0.6.1"
+requests = "^2.30.0"
+pysimdjson = {extras = ["dev"], version = "^5.0.2"}
+typer = "^0.9.0"
 toml = "^0.10.2"
 pydantic = "^1.9.0"
-rich = "^12.4.1"
+rich = "13.*"
 altair-saver = "^0.5.0"
-altair = "^4.2.0"
-scipy = "^1.7.3"
+altair = "^5.0.0"
+scipy = "1.*"
 bibtexparser = "^1.4.0"
 tantivy = "^0.13.2"
+textual = "^0.26.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.1.2"
-black = "^22.3.0"
-pylint = "^2.13.8"
+pytest = "^7.3.1"
+black = "23.*"
+pylint = "2.17.*"
 mypy = "^0.950"
 isort = "^5.10.1"
-types-requests = "^2.27.25"
+types-requests = "^2.30.0"
 types-toml = "^0.10.7"
 
 [tool.poetry.scripts]
 pedroai = "pedroai.main:cli"
 snapshot = "pedroai.snapshot:cli"
+slogs = "pedroai.slurm_logs:cli"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.8.0"
