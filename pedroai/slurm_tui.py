@@ -1,9 +1,9 @@
 from pathlib import Path
-import subprocess
+import asyncio
 import os
 
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.containers import Horizontal, Vertical
 from textual.widgets import (
     Header,
     Footer,
@@ -17,7 +17,6 @@ from textual.widgets import (
 )
 
 
-# SQUEUE = "squeue --me --format='%.18i %.9P %.30j %.8T %.10M %.9l %.6D %R'"
 SQUEUE = "squeue --me --Format='JobID:|,ArrayJobID:|,ArrayTaskID:|,Partition:|,Name:|,State:|,TimeUsed:|,NumNodes:|,Nodelist:|,STDOUT:|,STDERR:'"
 FIELDS = [
     "job_id",
@@ -35,15 +34,20 @@ FIELDS = [
 DISPLAY_FIELDS = FIELDS[:-2]
 
 
-def run_squeue(cached: bool = False):
-    if cached:
-        with open("/private/home/par/slurm_tui.txt") as f:
-            lines = f.read().strip().split("\n")
+async def run_squeue():
+    if 'STUI_CACHE' in os.environ:
+        cache = bool(os.environ['STUI_CACHE'])
     else:
-        proc = subprocess.run(
-            SQUEUE, shell=True, capture_output=True, check=True, text=True
-        )
-        lines = proc.stdout.strip().split("\n")
+        cache = False
+
+    if cache:
+        proc = await asyncio.create_subprocess_shell('sleep 3;cat /private/home/par/slurm_tui.txt', stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+        stdout, _ = await proc.communicate()
+        lines = stdout.decode('utf8').strip().split('\n')
+    else:
+        proc = await asyncio.create_subprocess_shell(SQUEUE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+        stdout, _ = await proc.communicate()
+        lines = stdout.decode('utf8').strip().split("\n")
     table_rows = []
     for idx, l in enumerate(lines):
         if idx == 0:
@@ -98,37 +102,102 @@ def read_file(path: Path):
     with open(path) as f:
         return f.readlines()
 
+APP_CSS = """
+#queue_table {
+    height: 25%;
+}
+#loading {
+    height: 25%;
+}
+
+.hidden {
+    display: none;
+}
+
+#logs {
+    height: 68%;
+    border: green;
+    overflow-y: scroll;
+}
+
+
+#stdout {
+    height: auto;
+    overflow: hidden;
+}
+
+#stderr {
+    height: auto;
+    overflow: hidden;
+}
+
+
+#stdout_tab {
+    height: auto;
+}
+
+#stderr_tab {
+    height: auto;
+}
+
+.green_border {
+    border: green;
+}
+
+#node_buttons {
+    height: 3;
+    margin-bottom: 1;
+}
+
+.node_button {
+    margin: 1 2;
+}
+
+.filename_label {
+    border: lightblue;
+}
+
+Screen {
+    scrollbar-color: blue;
+    scrollbar-background: gray;
+}
+"""
+
+
 
 class SlurmDashboardApp(App):
     BINDINGS = [
         ("r", "refresh_slurm", "Refresh Slurm"),
         ("q", "quit", "Quit"),
     ]
-    CSS_PATH = "slurm_tui_styles/style.css"
+    CSS = APP_CSS
 
-    def _update_slurm(self):
-        self.squeue_rows, self.squeue_lookup = run_squeue()
+    async def _update_slurm(self):
+        self.squeue_rows, self.squeue_lookup = await run_squeue()
         table = self.query_one(DataTable)
         table.clear()
         for (job_id, task_id), row in self.squeue_lookup.items():
             cells = [row[f] for f in DISPLAY_FIELDS]
             table.add_row(*cells, key=f"{job_id}_{task_id}")
+        self.query_one('#loading').add_class('hidden')
+        self.query_one('#queue_table').remove_class('hidden')
 
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.add_columns(*DISPLAY_FIELDS)
         table.cursor_type = "row"
         self.selected_node = 0
         self.num_nodes = 1
         self.entry = None
-        self._update_slurm()
+        self.query_one('#loading').remove_class('hidden')
+        self.query_one('#queue_table').add_class('hidden')
+        self.run_worker(self._update_slurm(), exclusive=True)
         self.query_one("#stdout").write(
             "No Log File Selected", width=os.get_terminal_size().columns - 2
         )
         self.query_one("#stderr").write(
             "No Log File Selected", width=os.get_terminal_size().columns - 2
         )
-        self.query_one("#loading").add_class("hidden")
         self.query_one("#stdout_filename").update("No Job Selected")
         self.query_one("#stderr_filename").update("No Job Selected")
 
@@ -155,7 +224,7 @@ class SlurmDashboardApp(App):
         else:
             self.query_one("#stderr").write(f"Path does not exist: {stderr_file}")
 
-    def on_data_table_row_selected(self, event: DataTable.RowSelected):
+    async def on_data_table_row_selected(self, event: DataTable.RowSelected):
         job_id, task_id = event.row_key.value.split("_")
         key = (job_id, task_id)
         if key in self.squeue_lookup:
@@ -180,7 +249,7 @@ class SlurmDashboardApp(App):
             out.write(f"Selected slurm job has not started yet, is in state: {state}")
             err.write(f"Selected slurm job has not started yet, is in state: {state}")
 
-    def on_button_pressed(self, event: Button.Pressed) -> None:
+    async def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "next_node":
             self.selected_node = (self.selected_node + 1) % self.num_nodes
             self._update_log_outputs()
@@ -191,7 +260,7 @@ class SlurmDashboardApp(App):
     def compose(self) -> ComposeResult:
         yield Header()
         yield LoadingIndicator(id="loading")
-        yield DataTable(id="queue_table")
+        yield DataTable(id="queue_table", classes='hidden')
         yield Horizontal(
             Button("Previous Node", id="prev_node", classes="node_button"),
             Button("Next Node", id="next_node", classes="node_button"),
@@ -209,8 +278,10 @@ class SlurmDashboardApp(App):
                     yield TextLog(id="stderr", highlight=True, markup=True, wrap=True)
         yield Footer()
 
-    def action_refresh_slurm(self) -> None:
-        self._update_slurm()
+    async def action_refresh_slurm(self) -> None:
+        self.query_one('#loading').remove_class('hidden')
+        self.query_one('#queue_table').add_class('hidden')
+        self.run_worker(self._update_slurm(), exclusive=True)
 
 
 if __name__ == "__main__":
