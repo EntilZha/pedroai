@@ -104,10 +104,10 @@ def read_file(path: Path):
 
 APP_CSS = """
 #queue_table {
-    height: 25%;
+    height: 1fr;
 }
 #loading {
-    height: 25%;
+    height: 1fr;
 }
 
 .hidden {
@@ -115,7 +115,7 @@ APP_CSS = """
 }
 
 #logs {
-    height: 68%;
+    height: 2fr;
     border: green;
     overflow-y: scroll;
 }
