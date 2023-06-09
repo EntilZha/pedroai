@@ -13,7 +13,7 @@ cli.command(name='pushcuts')(notifications.pushcuts_main)
 cli.command(name='download')(download.main)
 cli.command(name='snapshot')(snapshot.main)
 cli.command(name='slogs')(slurm_logs.main)
-cli.command(name='stui')
+cli.command(name='stui')(stui)
 
 
 @cli.command()
