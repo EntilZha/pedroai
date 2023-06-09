@@ -97,6 +97,13 @@ async def run_squeue():
         elif "%j" in row["stdout"]:
             row["stdout"] = {0: row["stdout"].replace("%j", row["job_id"])}
             row["stderr"] = {0: row["stderr"].replace("%j", row["job_id"])}
+        
+        if row['stdout'] == 'N/A':
+            row['stdout'] = None
+
+        if row['stderr'] == 'N/A':
+            row['stderr'] = None
+
         table_rows.append(row)
     lookup_table = {(r["array_job_id"], r["array_task_id"]): r for r in table_rows}
     return table_rows, lookup_table
@@ -250,27 +257,38 @@ class SlurmDashboardApp(App):
         self.query_one("#stderr_filename").update("No Job Selected")
 
     def _update_log_outputs(self):
-        stdout_file = self.entry["stdout"][self.selected_node]
-        stderr_file = self.entry["stderr"][self.selected_node]
-        self.query_one("#stdout").clear()
-        self.query_one("#stderr").clear()
-        self.query_one("#stdout_filename").update(f"STDOUT Log File: {stdout_file}")
-        self.query_one("#stderr_filename").update(f"STDERR Log File: {stderr_file}")
-        if os.path.exists(stdout_file):
-            for line in read_file(stdout_file):
-                self.query_one("#stdout").write(
-                    line.strip(), width=os.get_terminal_size().columns - 2,
-                )
+        if self.entry is None:
+            return
+        if self.entry['stdout'] is None:
+            self.query_one("#stdout").clear()
+            self.query_one("#stdout").write(f"No STDOUT log file configured for selected job")
         else:
-            self.query_one("#stdout").write(f"Path does not exist: {stdout_file}")
+            stdout_file = self.entry["stdout"][self.selected_node]
+            self.query_one("#stdout").clear()
+            self.query_one("#stdout_filename").update(f"STDOUT Log File: {stdout_file}")
 
-        if os.path.exists(stderr_file):
-            for line in read_file(stderr_file):
-                self.query_one("#stderr").write(
-                    line.strip(), width=os.get_terminal_size().columns - 2,
-                )
+            if os.path.exists(stdout_file) and os.path.isfile(stdout_file):
+                for line in read_file(stdout_file):
+                    self.query_one("#stdout").write(
+                        line.strip(), width=os.get_terminal_size().columns - 2,
+                    )
+            else:
+                self.query_one("#stdout").write(f"Path does not exist: {stdout_file}, is it configured with slurm via --output?")
+
+        if self.entry['stderr'] is None:
+            self.query_one("#stderr").clear()
+            self.query_one("#stderr").write(f"No STDERR log file configured for selected job")
         else:
-            self.query_one("#stderr").write(f"Path does not exist: {stderr_file}")
+            self.query_one("#stderr").clear()
+            stderr_file = self.entry["stderr"][self.selected_node]
+            self.query_one("#stderr_filename").update(f"STDERR Log File: {stderr_file}")
+            if os.path.exists(stderr_file) and os.path.isfile(stderr_file):
+                for line in read_file(stderr_file):
+                    self.query_one("#stderr").write(
+                        line.strip(), width=os.get_terminal_size().columns - 2,
+                    )
+            else:
+                self.query_one("#stderr").write(f"Path does not exist: {stderr_file}, is it configured with slurm via --error?")
 
     async def on_data_table_row_selected(self, event: DataTable.RowSelected):
         job_id, task_id = event.row_key.value.split("_")
@@ -283,7 +301,7 @@ class SlurmDashboardApp(App):
         if self.entry["state"] == "RUNNING":
             self.num_nodes = len(entry["stdout"])
             self.selected_node = 0
-            if len(entry["stdout"]) > 1:
+            if entry['stdout'] is not None and entry['stderr'] is not None and len(entry["stdout"]) > 1:
                 self.query_one("#node_buttons").remove_class("hidden")
             else:
                 self.query_one("#node_buttons").add_class("hidden")
