@@ -4,7 +4,9 @@ import os
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
+from textual.screen import ModalScreen
 from textual.widgets import (
+    Markdown,
     Header,
     Footer,
     LoadingIndicator,
@@ -161,16 +163,60 @@ Screen {
     scrollbar-color: blue;
     scrollbar-background: gray;
 }
+
+#help_container {
+    height: auto;
+    padding: 1;
+    width: 90;
+    background: $surface;
+    border: thick cyan 80%;
+}
+
+HelpScreen {
+    align: center middle;
+}
 """
 
 
+HELP = """
+- The top half of the viewer shows the output of Slurm `squeue --me`
+- The bottom half shows logs for specific slurm jobs/tasks
+- Click on rows of the `squeue` table to see the job's stdout/stderr logs below
+- Press `r` to refresh squeue (this app does not auto-refresh)
+- Press `l` to refresh stdout/err logs
+- Press `q` to quit the app
+"""
+
+class HelpScreen(ModalScreen):
+    def compose(self) -> ComposeResult:
+        yield Vertical(
+            Label('Help'),
+            Markdown(HELP),
+            Button("Exit Help", id='exit_help'),
+            id='help_container'
+            
+        )
+    
+    def on_button_pressed(self, event: Button.Pressed):
+        if event.button.id == 'exit_help':
+            self.app.pop_screen()
+
 
 class SlurmDashboardApp(App):
+    TITLE = "Slurm squeue and Log Viewer"
     BINDINGS = [
         ("r", "refresh_slurm", "Refresh Slurm"),
+        ("l", "refresh_logs", "Refresh Logs"),
+        ('h', 'help', "Help"),
         ("q", "quit", "Quit"),
     ]
     CSS = APP_CSS
+
+    def action_help(self) -> None:
+        self.push_screen(HelpScreen())
+    
+    def action_refresh_logs(self) -> None:
+        self._update_log_outputs()
 
     async def _update_slurm(self):
         self.squeue_rows, self.squeue_lookup = await run_squeue()
